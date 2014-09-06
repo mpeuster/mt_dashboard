@@ -1,0 +1,28 @@
+body {
+	margin: 16px;
+
+}
+
+#header {
+	padding-bottom:16px;
+}
+
+.full-width {
+ 	width:100%;
+ 	display: block;
+}
+
+.debug {
+	margin: auto;
+	border: 1px solid black;
+}
+
+
+#map-panel{
+	text-align: center;
+}
+
+#map-canvas {
+	margin: auto;
+	border: 1px solid black;
+}
