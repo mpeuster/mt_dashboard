@@ -1,10 +1,11 @@
 
 var UE_MODEL = {};
 var UE_LIST = [];
+var CONNECTED = false;
 var FETCHING_ENABLED = true;
 var UPDATE_ENABLED = true;
 var SELECTED_UE = null;
-var API_HOST = 'http://127.0.0.1:6680';
+var API_HOST = null;
 
 //-------- general helper
 // Disable function
@@ -49,7 +50,7 @@ function updateViewUeDropdown()
     	$('#ue_dropdown_item_' + i).click(eventUeDorpdownItemSelected(ue.uri));
     	
     	// use first UE as default selection
-    	if(!isUeRegistered(SELECTED_UE) && i === 0)
+    	if(!isUeRegistered(SELECTED_UE) && i === 0 && CONNECTED)
     	{
     		eventUeDorpdownItemSelected(ue.uri)();
     	}
@@ -80,6 +81,17 @@ function updateViewUeMonitor()
 		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
 		$("#ue_data_mac").append(ue.wifi_mac);
 		$("#ue_data_last_update").append(new Date(ue.updated_at).toLocaleTimeString());
+	}
+	else
+	{
+		// clear
+		$("#ue_data_name").append("-");
+		$("#ue_data_lsid").append("-");
+		$("#ue_data_position").append("-");
+		$("#ue_data_display_state").append("-");
+		$("#ue_data_active_app").append("-");
+		$("#ue_data_mac").append("-");
+		$("#ue_data_last_update").append("-");
 	}
 }
 
@@ -142,18 +154,27 @@ function fetchData()
 
 function eventDisconnectClick()
 {
+	CONNECTED = false;
+	console.log("Disconnecting...");
 	// disable data fetching
 	FETCHING_ENABLED = false;
 	// disable vie updating
-	UPDATE_ENABLED = false;
+	setTimeout(function(){
+		// disable after some time, to give UI time to clear itself
+		UPDATE_ENABLED = false;
+		console.log("Stopped UI updates.");
+	}, 3000);
+	SELECTED_UE = null;
 	// disable button
 	$('#btn_connect').disable(false);
 	$('#btn_disconnect').disable(true);
-	// TODO clear views
 }
 
 function eventConnectClick()
 {
+	// set host address
+	API_HOST = "http://" + $("#text_api_host").val();
+	console.log("Connecting to: " + API_HOST + "...");
 	// kick off data fetching
 	FETCHING_ENABLED = true;
 	fetchData();
@@ -163,6 +184,8 @@ function eventConnectClick()
 	// disable button
 	$('#btn_connect').disable(true);
 	$('#btn_disconnect').disable(false);
+
+	CONNECTED = true;
 }
 
 function eventUeDorpdownItemSelected(uri)
