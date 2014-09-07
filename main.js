@@ -1,6 +1,8 @@
 
 var UE_MODEL = {};
 var UE_LIST = [];
+var AP_MODEL = {};
+var AP_LIST = [];
 var CONNECTED = false;
 var FETCHING_ENABLED = true;
 var UPDATE_ENABLED = true;
@@ -16,7 +18,8 @@ jQuery.fn.extend({
         });
     }
 });
-//----
+
+//---- Model
 
 function getUe(url)
 {
@@ -43,6 +46,21 @@ function isUeRegistered(uri)
 	return found;
 }
 
+function getAp(url)
+{
+	if(url in AP_MODEL)
+		return AP_MODEL[url][AP_MODEL[url].length - 1];
+	return null;
+}
+
+function getApList()
+{
+	if(CONNECTED)
+		return AP_LIST.map(getAp);
+	return [];
+}
+
+//---- View
 
 function updateViewUeDropdown()
 {
@@ -102,13 +120,13 @@ function updateViewUeTable()
 	// clear
 	$("#table_ue_overview").empty();
 	// headline
-	$("#table_ue_overview").append('<tr><th>Name</th><th>URI</th><th>Assignment</th><th></th></tr>');
+	$("#table_ue_overview").append('<tr><th>Name</th><th>Assignment</th><th></th></tr>');
 	// content
 	$.each(getUeList(), function(i, ue) {
 		var line_str = '<tr>';
 		line_str +=	'<td>' + ue.device_id + '</td>';
-		line_str +=	'<td><code><small>' + ue.uri + '</small></code></td>';
-		line_str +=	'<td>' + ue.assigned_accesspoint.substring(40) + '</td>';
+		//line_str +=	'<td><code><small>' + ue.uri + '</small></code></td>';
+		line_str +=	'<td><small>' + ue.assigned_accesspoint + '</small></td>';
 		line_str +=	'<td class="text-right">';
 		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ue_overview_change_">Change Location</button>&nbsp';
 		line_str +=	'<button type="button" class="btn btn-xs btn-danger" id="button_ue_overview_remove_">Remove &nbsp;<span class="glyphicon glyphicon-remove-circle"></span></button>';
@@ -119,11 +137,33 @@ function updateViewUeTable()
 	//TODO Add Button + Row events
 }
 
+function updateViewApTable()
+{
+	// clear
+	$("#table_ap_overview").empty();
+	// headline
+	$("#table_ap_overview").append('<tr><th>Name</th><th>BSSID</th><th>SSID</th><th>Power State</th></tr>');
+	// content
+	$.each(getApList(), function(i, ap) {
+		var line_str = '<tr>';
+		line_str +=	'<td>' + ap.device_id + '</td>';
+		//line_str +=	'<td><code><small>' + ap.uri + '</small></code></td>';
+		line_str +=	'<td><code>' + ap.bssid + '</code></td>';
+		line_str +=	'<td>' + ap.ssid + '</td>';
+		line_str +=	'<td>' + (ap.power_state ? 'radio_on' : 'radio_off') + '</td>';
+		line_str +=	'</tr>' ;
+		$("#table_ap_overview").append(line_str);
+	});
+	//TODO Add Button + Row events
+}
+
 function updateView()
 {
 	updateViewUeDropdown();
 	updateViewUeMonitor();
+
 	updateViewUeTable();
+	updateViewApTable();
 
 	if(UPDATE_ENABLED)
 		setTimeout(updateView, 1000);
@@ -141,6 +181,20 @@ function addUeDataToModel(ue_data)
 	// if array get to big, remove the first element
 	if(UE_MODEL[ue_data.uri].length > 180)
 		UE_MODEL[ue_data.uri].shift(); // remove first element
+}
+
+function addApDataToModel(ap_data)
+{
+	// if we have first occurrence of this AP: create a new Array for its history
+	if(!(ap_data.uri in AP_MODEL))
+		AP_MODEL[ap_data.uri] = [];
+
+	// append the UE dataset to the history array of this UE
+	AP_MODEL[ap_data.uri].push(ap_data);
+
+	// if array get to big, remove the first element
+	if(AP_MODEL[ap_data.uri].length > 180)
+		AP_MODEL[ap_data.uri].shift(); // remove first element
 }
 
 
@@ -161,7 +215,16 @@ function fetchUeData()
 
 function fetchApData()
 {
-
+	console.debug("fetchApData: " + Date.now());
+	// fetch all UE information from backend
+	$.getJSON(API_HOST + '/api/accesspoint', function(ap_list) {
+			AP_LIST = ap_list;
+			$.each(ap_list, function(i, ap_url) {			
+				$.getJSON(API_HOST + ap_url, function(ap_data) {			
+					addApDataToModel(ap_data);
+				});
+			});
+		});
 }
 
 
