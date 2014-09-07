@@ -67,12 +67,12 @@ function updateViewUeDropdown()
 	$("#ue_dropdown_list").empty();
 	$.each(getUeList(), function(i, ue) {
     	$("#ue_dropdown_list").append('<li><a href="#" id="ue_dropdown_item_' + i + '">' + ue.device_id + '</a></li>');
-    	$('#ue_dropdown_item_' + i).click(eventUeDorpdownItemSelected(ue.uri));
+    	$('#ue_dropdown_item_' + i).click(eventUeSelected(ue.uri));
     	
     	// use first UE as default selection
     	if(!isUeRegistered(SELECTED_UE) && i === 0 && CONNECTED)
     	{
-    		eventUeDorpdownItemSelected(ue.uri)();
+    		eventUeSelected(ue.uri)();
     	}
 	});
 }
@@ -123,18 +123,21 @@ function updateViewUeTable()
 	$("#table_ue_overview").append('<tr><th>Name</th><th>Assignment</th><th></th></tr>');
 	// content
 	$.each(getUeList(), function(i, ue) {
-		var line_str = '<tr>';
+		var line_str = '<tr class="clickable_row" id="row_ue_overview_' + i +'">';
 		line_str +=	'<td>' + ue.device_id + '</td>';
 		//line_str +=	'<td><code><small>' + ue.uri + '</small></code></td>';
 		line_str +=	'<td><small>' + ue.assigned_accesspoint + '</small></td>';
 		line_str +=	'<td class="text-right">';
-		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ue_overview_change_">Change Location</button>&nbsp';
-		line_str +=	'<button type="button" class="btn btn-xs btn-danger" id="button_ue_overview_remove_">Remove &nbsp;<span class="glyphicon glyphicon-remove-circle"></span></button>';
+		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ue_overview_change_' + i + '">Change Location</button>&nbsp';
+		line_str +=	'<button type="button" class="btn btn-xs btn-danger" id="button_ue_overview_remove_' + i + '">Remove &nbsp;<span class="glyphicon glyphicon-remove-circle"></span></button>';
 		line_str +=	'</td>';
 		line_str +=	'</tr>' ;
 		$("#table_ue_overview").append(line_str);
+		// add row events
+		$('#row_ue_overview_' + i).click(eventUeSelected(ue.uri));
+		$('#button_ue_overview_change_' + i).click(eventUeChangeLocation(ue.uri));
+		$('#button_ue_overview_remove_' + i).click(eventUeRemove(ue.uri));
 	});
-	//TODO Add Button + Row events
 }
 
 function updateViewApTable()
@@ -154,7 +157,6 @@ function updateViewApTable()
 		line_str +=	'</tr>' ;
 		$("#table_ap_overview").append(line_str);
 	});
-	//TODO Add Button + Row events
 }
 
 function updateView()
@@ -278,14 +280,40 @@ function eventConnectClick()
 	CONNECTED = true;
 }
 
-function eventUeDorpdownItemSelected(uri)
+function eventUeSelected(uri)
 {
 	// function generator:
 	return function() {
 		SELECTED_UE = uri;
-		console.log("Selected UE: " + SELECTED_UE);
+		console.log("Selected UE: " + uri);
 	};
 }
+
+function eventUeRemove(uri)
+{
+	// function generator:
+	return function() {
+		console.log("Remove UE: " + uri);
+		$.ajax({
+			url: API_HOST + uri,
+			type: 'DELETE',
+			success: function(result) {
+        		console.log("Removed UE: " + uri);
+    		}
+		});
+	};
+}
+
+function eventUeChangeLocation(uri)
+{
+	// function generator:
+	return function() {
+		alert("Not implemented.");
+		console.log("Change UE location: " + uri);
+	};
+}
+
+
 
 $(document).ready(function(){
 	console.info("document ready");

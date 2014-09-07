@@ -17,6 +17,10 @@ body {
 	border: 1px solid black;
 }
 
+.clickable_row :hover {
+    cursor: pointer;
+}
+
 
 #map-panel{
 	text-align: center;
