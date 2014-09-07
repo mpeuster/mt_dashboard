@@ -27,7 +27,9 @@ function getUe(url)
 
 function getUeList()
 {
-	return UE_LIST.map(getUe);
+	if(CONNECTED)
+		return UE_LIST.map(getUe);
+	return [];
 }
 
 function isUeRegistered(uri)
@@ -95,10 +97,33 @@ function updateViewUeMonitor()
 	}
 }
 
+function updateViewUeTable()
+{
+	// clear
+	$("#table_ue_overview").empty();
+	// headline
+	$("#table_ue_overview").append('<tr><th>Name</th><th>URI</th><th>Assignment</th><th></th></tr>');
+	// content
+	$.each(getUeList(), function(i, ue) {
+		var line_str = '<tr>';
+		line_str +=	'<td>' + ue.device_id + '</td>';
+		line_str +=	'<td><code><small>' + ue.uri + '</small></code></td>';
+		line_str +=	'<td>' + ue.assigned_accesspoint.substring(40) + '</td>';
+		line_str +=	'<td class="text-right">';
+		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ue_overview_change_">Change Location</button>&nbsp';
+		line_str +=	'<button type="button" class="btn btn-xs btn-danger" id="button_ue_overview_remove_">Remove &nbsp;<span class="glyphicon glyphicon-remove-circle"></span></button>';
+		line_str +=	'</td>';
+		line_str +=	'</tr>' ;
+		$("#table_ue_overview").append(line_str);
+	});
+	//TODO Add Button + Row events
+}
+
 function updateView()
 {
 	updateViewUeDropdown();
 	updateViewUeMonitor();
+	updateViewUeTable();
 
 	if(UPDATE_ENABLED)
 		setTimeout(updateView, 1000);
@@ -167,6 +192,7 @@ function eventDisconnectClick()
 	SELECTED_UE = null;
 	// disable button
 	$('#btn_connect').disable(false);
+	$('#text_api_host').disable(false);
 	$('#btn_disconnect').disable(true);
 }
 
@@ -183,6 +209,7 @@ function eventConnectClick()
 	updateView();
 	// disable button
 	$('#btn_connect').disable(true);
+	$('#text_api_host').disable(true);
 	$('#btn_disconnect').disable(false);
 
 	CONNECTED = true;
@@ -211,6 +238,8 @@ $(document).ready(function(){
 	$('#btn_disconnect').click(eventDisconnectClick);
 
 
+	//TODO Romove
+	eventConnectClick(); // autoconnect for dev
 
 
 });
