@@ -42,8 +42,13 @@
 
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">		
 
-			<ul class="nav navbar-nav">					
+				<li class="active"><a href="#tab_overview" role="tab" data-toggle="tab">Overview</a></li>
+				<li><a href="#tab_livemap" role="tab" data-toggle="tab">Live Map</a></li>
+				<li><a href="#tab_plots" role="tab" data-toggle="tab">Plots</a></li>
+				<li><a href="#tab_settings" role="tab" data-toggle="tab">Settings</a></li>
+
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Select UE <span class="caret"></span></a>
 					<ul class="dropdown-menu" role="menu" id="ue_dropdown_list">
@@ -51,37 +56,80 @@
 						<!--
 						<li><a href="#">UE PB 1</a></li>
 						<li><a href="#">UE PB 2</a></li>
-						-->
-					</ul>
-				</li>
-					<!--
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
 					-->
-			</ul>
-			
-			<form class="navbar-form navbar-right">
-				<button type="button" class="btn btn-success" id="btn_connect">Connect &nbsp;<span class="glyphicon glyphicon-play-circle"></span></button>
-				<button type="button" class="btn btn-danger" id="btn_disconnect">Disconnect &nbsp;<span class="glyphicon glyphicon-off"></span></button>
-			</form>				
-		</div><!-- /.navbar-collapse -->
-	</div><!-- /.container-fluid -->
+				</ul>
+			</li>	
+		</ul>
+
+		<form class="navbar-form navbar-right">
+			<button type="button" class="btn btn-success" id="btn_connect">Connect &nbsp;<span class="glyphicon glyphicon-play-circle"></span></button>
+			<button type="button" class="btn btn-danger" id="btn_disconnect">Disconnect &nbsp;<span class="glyphicon glyphicon-off"></span></button>
+		</form>				
+	</div><!-- /.navbar-collapse -->
+</div><!-- /.container-fluid -->
 </nav>
 
 
 <div class="row">
 	<div class="col-md-8">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">Live Map</h3>
+
+		<div class="tab-content">
+			<!-- OVERVIEW -->
+			<div class="tab-pane active" id="tab_overview">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">User Equipment Overview</h3>
+					</div>
+					<div class="panel-body" id="panel-ue-overview">
+						Content
+					</div>
+				</div>
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Access Point Overview</h3>
+					</div>
+					<div class="panel-body" id="panel-ap-overview">
+						Content
+					</div>
+				</div>
 			</div>
-			<div class="panel-body" id="map-panel">
-				<canvas id="map-canvas" width="700" height="400"></canvas>
+			<!-- LIVE MAP -->
+			<div class="tab-pane" id="tab_livemap">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Live Map</h3>
+					</div>
+					<div class="panel-body" id="map-panel">
+						<canvas id="map-canvas" width="700" height="400"></canvas>
+					</div>
+				</div>
+			</div>
+			<!-- PLOTS -->
+			<div class="tab-pane" id="tab_plots">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Plots</h3>
+					</div>
+					<div class="panel-body" id="panel-plots">
+						Not implemented.
+					</div>
+				</div>
+			</div>
+			<!-- SETTINGS -->
+			<div class="tab-pane" id="tab_settings">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h3 class="panel-title">Settings</h3>
+					</div>
+					<div class="panel-body" id="panel-settings">
+						Not implemented.
+					</div>
+				</div>
 			</div>
 		</div>
+
 	</div>
 	<div class="col-md-4">
-
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">UE Monitor</h3>
@@ -90,34 +138,34 @@
 			<div class="panel-body">
 
 				<table class="table table-striped">
-				<tr>
-					<th>Name:</th>
-					<th id="ue_data_name">UPB-UE1</th>
-				</tr>
-				<tr>
-					<td>LSID:</td>
-					<td id="ue_data_lsid">nod1</td>
-				</tr>
-				<tr>
-					<td>Position (X/Y):</td>
-					<td id="ue_data_position">0.0/0.0</td>
-				</tr>
-				<tr>
-					<td>Display State:</td>
-					<td id="ue_data_display_state">bla</td>
-				</tr>
-				<tr>
-					<td>Active App:</td>
-					<td id="ue_data_active_app">com.google.android.browser</td>
-				</tr>
-				<tr>
-					<td>WiFi Mac:</td>
-					<td id="ue_data_mac">bla</td>
-				</tr>
-				<tr>
-					<td>Last Update:</td>
-					<td id="ue_data_last_update">bla</td>
-				</tr>
+					<tr>
+						<th>Name:</th>
+						<th id="ue_data_name">UPB-UE1</th>
+					</tr>
+					<tr>
+						<td>LSID:</td>
+						<td id="ue_data_lsid">nod1</td>
+					</tr>
+					<tr>
+						<td>Position (X/Y):</td>
+						<td id="ue_data_position">0.0/0.0</td>
+					</tr>
+					<tr>
+						<td>Display State:</td>
+						<td id="ue_data_display_state">bla</td>
+					</tr>
+					<tr>
+						<td>Active App:</td>
+						<td id="ue_data_active_app">com.google.android.browser</td>
+					</tr>
+					<tr>
+						<td>WiFi Mac:</td>
+						<td id="ue_data_mac">bla</td>
+					</tr>
+					<tr>
+						<td>Last Update:</td>
+						<td id="ue_data_last_update">bla</td>
+					</tr>
 				</table>
 
 			</div>
