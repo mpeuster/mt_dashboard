@@ -3,6 +3,7 @@ var UE_MODEL = {};
 var UE_LIST = [];
 var FETCHING_ENABLED = true;
 var UPDATE_ENABLED = true;
+var SELECTED_UE = null;
 var API_HOST = 'http://127.0.0.1:6680';
 
 //-------- general helper
@@ -20,7 +21,7 @@ function getUe(url)
 {
 	if(url in UE_MODEL)
 		return UE_MODEL[url][UE_MODEL[url].length - 1];
-	return undefined;
+	return null;
 }
 
 function getUeList()
@@ -28,22 +29,67 @@ function getUeList()
 	return UE_LIST.map(getUe);
 }
 
+function isUeRegistered(uri)
+{
+	found = false;
+	$.each(UE_LIST, function(i, luri) {
+		//console.warn(":.:" + luri + "===" + uri)
+		if(luri===uri)
+			found = true;
+	});
+	return found;
+}
+
 
 function updateViewUeDropdown()
 {
 	$("#ue_dropdown_list").empty();
 	$.each(getUeList(), function(i, ue) {
-    	$("#ue_dropdown_list").append('<li><a href="#">' + ue.device_id + '</a></li>');
+    	$("#ue_dropdown_list").append('<li><a href="#" id="ue_dropdown_item_' + i + '">' + ue.device_id + '</a></li>');
+    	$('#ue_dropdown_item_' + i).click(eventUeDorpdownItemSelected(ue.uri));
+    	
+    	// use first UE as default selection
+    	if(!isUeRegistered(SELECTED_UE) && i === 0)
+    	{
+    		eventUeDorpdownItemSelected(ue.uri)();
+    	}
 	});
+}
+
+function updateViewUeMonitor()
+{
+	// empty fields
+	$("#ue_data_name").empty();
+	$("#ue_data_lsid").empty();
+	$("#ue_data_position").empty();
+	$("#ue_data_display_state").empty();
+	$("#ue_data_active_app").empty();
+	$("#ue_data_mac").empty();
+	$("#ue_data_last_update").empty();
+
+	// get UE
+	ue = getUe(SELECTED_UE);
+	
+	if(ue)
+	{
+		// fill view with data
+		$("#ue_data_name").append(ue.device_id);
+		$("#ue_data_lsid").append(ue.location_service_id);
+		$("#ue_data_position").append(ue.position_x.toFixed(2) + " / " + ue.position_y.toFixed(2));
+		$("#ue_data_display_state").append(ue.display_state ? "On" : "Off");
+		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
+		$("#ue_data_mac").append(ue.wifi_mac);
+		$("#ue_data_last_update").append(new Date(ue.updated_at).toLocaleTimeString());
+	}
 }
 
 function updateView()
 {
-
 	updateViewUeDropdown();
+	updateViewUeMonitor();
 
 	if(UPDATE_ENABLED)
-		setTimeout(updateView, 2000);
+		setTimeout(updateView, 1000);
 }
 
 function addUeDataToModel(ue_data)
@@ -94,7 +140,7 @@ function fetchData()
 }
 
 
-function eventDisconnect()
+function eventDisconnectClick()
 {
 	// disable data fetching
 	FETCHING_ENABLED = false;
@@ -106,7 +152,7 @@ function eventDisconnect()
 	// TODO clear views
 }
 
-function eventConnect()
+function eventConnectClick()
 {
 	// kick off data fetching
 	FETCHING_ENABLED = true;
@@ -119,6 +165,15 @@ function eventConnect()
 	$('#btn_disconnect').disable(false);
 }
 
+function eventUeDorpdownItemSelected(uri)
+{
+	// function generator:
+	return function() {
+		SELECTED_UE = uri;
+		console.log("Selected UE: " + SELECTED_UE);
+	};
+}
+
 $(document).ready(function(){
 	console.info("document ready");
 	
@@ -129,8 +184,10 @@ $(document).ready(function(){
 	$('#btn_disconnect').disable(true);
 	
 	// register UI events
-	$('#btn_connect').click(eventConnect);
-	$('#btn_disconnect').click(eventDisconnect);
+	$('#btn_connect').click(eventConnectClick);
+	$('#btn_disconnect').click(eventDisconnectClick);
+
+
 
 
 });
