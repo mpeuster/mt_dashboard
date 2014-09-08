@@ -1,64 +1,4 @@
 
-var UE_MODEL = {};
-var UE_LIST = [];
-var AP_MODEL = {};
-var AP_LIST = [];
-var CONNECTED = false;
-var FETCHING_ENABLED = true;
-var UPDATE_ENABLED = true;
-var SELECTED_UE = null;
-var API_HOST = null;
-
-//-------- general helper
-// Disable function
-jQuery.fn.extend({
-    disable: function(state) {
-        return this.each(function() {
-            this.disabled = state;
-        });
-    }
-});
-
-//---- Model
-
-function getUe(url)
-{
-	if(url in UE_MODEL)
-		return UE_MODEL[url][UE_MODEL[url].length - 1];
-	return null;
-}
-
-function getUeList()
-{
-	if(CONNECTED)
-		return UE_LIST.map(getUe);
-	return [];
-}
-
-function isUeRegistered(uri)
-{
-	found = false;
-	$.each(UE_LIST, function(i, luri) {
-		//console.warn(":.:" + luri + "===" + uri)
-		if(luri===uri)
-			found = true;
-	});
-	return found;
-}
-
-function getAp(url)
-{
-	if(url in AP_MODEL)
-		return AP_MODEL[url][AP_MODEL[url].length - 1];
-	return null;
-}
-
-function getApList()
-{
-	if(CONNECTED)
-		return AP_LIST.map(getAp);
-	return [];
-}
 
 //---- View
 
@@ -99,7 +39,7 @@ function updateViewUeMonitor()
 		$("#ue_data_position").append(ue.position_x.toFixed(2) + " / " + ue.position_y.toFixed(2));
 		$("#ue_data_display_state").append(ue.display_state ? "On" : "Off");
 		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
-		$("#ue_data_mac").append(ue.wifi_mac);
+		$("#ue_data_mac").append('<code>' + ue.wifi_mac + '</code>');
 		$("#ue_data_last_update").append(new Date(ue.updated_at).toLocaleTimeString());
 	}
 	else
@@ -126,7 +66,7 @@ function updateViewUeTable()
 		var line_str = '<tr class="clickable_row" id="row_ue_overview_' + i +'">';
 		line_str +=	'<td>' + ue.device_id + '</td>';
 		//line_str +=	'<td><code><small>' + ue.uri + '</small></code></td>';
-		line_str +=	'<td><small>' + ue.assigned_accesspoint + '</small></td>';
+		line_str +=	'<td><code><small>' + ue.assigned_accesspoint + '</small></code></td>';
 		line_str +=	'<td class="text-right">';
 		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ue_overview_change_' + i + '">Change Location</button>&nbsp';
 		line_str +=	'<button type="button" class="btn btn-xs btn-danger" id="button_ue_overview_remove_' + i + '">Remove &nbsp;<span class="glyphicon glyphicon-remove-circle"></span></button>';
@@ -166,6 +106,8 @@ function updateView()
 
 	updateViewUeTable();
 	updateViewApTable();
+
+	live_map_paint();
 
 	if(UPDATE_ENABLED)
 		setTimeout(updateView, 1000);
@@ -313,10 +255,20 @@ function eventUeChangeLocation(uri)
 	};
 }
 
-
+function resizeLiveMap()
+{
+	// set live map height
+	$('#map-area').css({'height':($(window).height() - 180)+'px'});
+}
 
 $(document).ready(function(){
 	console.info("document ready");
+	resizeLiveMap();
+
+	// init live map
+	live_map_init();
+	// TODO remove after dev?
+	live_map_paint();
 	
 	//fetchData();
 	//updateView();
@@ -329,9 +281,14 @@ $(document).ready(function(){
 	$('#btn_disconnect').click(eventDisconnectClick);
 
 
+
 	//TODO Romove
-	eventConnectClick(); // autoconnect for dev
+	//eventConnectClick(); // autoconnect for dev
 
 
+});
+
+$( window ).resize(function() {
+	resizeLiveMap();
 });
 

@@ -1,5 +1,6 @@
 body {
 	margin: 16px;
+	height: 100%;
 
 }
 
@@ -12,8 +13,15 @@ body {
  	display: block;
 }
 
+.full-height {
+	height:100%;
+}
+
+.no-padding {
+	padding:0px;
+}
+
 .debug {
-	margin: auto;
 	border: 1px solid black;
 }
 
@@ -26,7 +34,7 @@ body {
 	text-align: center;
 }
 
-#map-canvas {
+#map-area {
 	margin: auto;
-	border: 1px solid black;
+	/*border: 1px solid black;*/
 }
