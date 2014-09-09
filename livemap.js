@@ -5,8 +5,22 @@ var PAPERPADDING = 80; // padding of drawing area
 var GRIDSIZE = 10;
 var APSIZE = 100;
 var UESIZE = 100;
-var RENDER_TEXT = false;
+var RENDER_TEXT = true;
+var RENDER_CONNECTION_CIRCLE = true;
 
+//---- Helper
+
+/**
+ * Uses .postion_x and .position_y of the 
+ * objects to compute their distance. 
+ */
+function distance(o1, o2)
+{
+	var x = Math.abs(o1.position_x - o2.position_x);
+	var y = Math.abs(o1.position_y - o2.position_y);
+	return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+}
+//----
 
 function draw_grid()
 {
@@ -52,15 +66,19 @@ function draw_grid()
 
 function draw_accesspoint(ap)
 {
-	var img = LMAP.image("images/ap_normal.png", ap.position_x - (APSIZE/2), ap.position_y - (APSIZE/2), APSIZE, APSIZE);
+	var imgsrc = "images/ap_normal.png";
+	if(!ap.power_state)
+		imgsrc = "images/ap_red.png";
+	var img = LMAP.image(imgsrc, ap.position_x - (APSIZE/2), ap.position_y - (APSIZE/2), APSIZE, APSIZE);
 	// add tooltip
 	img.attr("title", "" + ap.device_id + "\nX:" + ap.position_x + " Y:" + ap.position_y);
+
 	ELEMENTS.push(img);
 	if(RENDER_TEXT) 
 	{
 		// add text
 		var text = LMAP.text(ap.position_x, ap.position_y + (APSIZE/2) + 10, ap.device_id);
-		text.attr("font-size", 30);
+		text.attr("font-size", 24);
 		text.attr("", "");
 		text.attr("", "");
 		ELEMENTS.push(text);
@@ -85,7 +103,7 @@ function draw_ue(ue)
 	{
 		// add text
 		var text = LMAP.text(ue.position_x, ue.position_y + (UESIZE/2) + 20, ue.device_id);
-		text.attr("font-size", 30);
+		text.attr("font-size", 24);
 		text.attr("", "");
 		text.attr("", "");
 		ELEMENTS.push(text);
@@ -101,14 +119,26 @@ function draw_ues()
 
 function draw_connection(ue, ap)
 {
+	if(RENDER_CONNECTION_CIRCLE)
+	{
+		// optional circle
+		var circle = LMAP.circle(ap.position_x, ap.position_y, distance(ue, ap));
+		circle.attr("stroke", "#333");
+	   	//circle.attr("stroke-width", 2.0);
+	   	circle.attr("fill", "#66FF66");
+	   	circle.attr("stroke-opacity", 0.6);
+	   	circle.attr("opacity", 0.3);
+		ELEMENTS.push(circle);
+	}
+
+	// line
 	var connpath = "M " + ue.position_x + " " + ue.position_y + " L " + ap.position_x + " " + ap.position_y + " z";
    	var connline = LMAP.path(connpath);
    	connline.attr("stroke", "#F00");
    	connline.attr("stroke-width", 3.0);
    	connline.attr("stroke-opacity", 0.6);
-   	connline.attr("stroke-dasharray", "-");
+   	//connline.attr("stroke-dasharray", "-");
    	connline.attr("stroke-linecap", "round");
-
 	ELEMENTS.push(connline);
 }
 
