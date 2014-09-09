@@ -3,6 +3,7 @@ var UE_MODEL = {};
 var UE_LIST = [];
 var AP_MODEL = {};
 var AP_LIST = [];
+var MAX_HISTORY = 60;
 var CONNECTED = false;
 var FETCHING_ENABLED = true;
 var UPDATE_ENABLED = true;

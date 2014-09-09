@@ -41,6 +41,9 @@ function updateViewUeMonitor()
 		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
 		$("#ue_data_mac").append('<code>' + ue.wifi_mac + '</code>');
 		$("#ue_data_last_update").append(new Date(ue.updated_at).toLocaleTimeString());
+
+		// update plots
+		updateViewUeMonitorPlots(ue);
 	}
 	else
 	{
@@ -123,7 +126,7 @@ function addUeDataToModel(ue_data)
 	UE_MODEL[ue_data.uri].push(ue_data);
 
 	// if array get to big, remove the first element
-	if(UE_MODEL[ue_data.uri].length > 180)
+	if(UE_MODEL[ue_data.uri].length > MAX_HISTORY)
 		UE_MODEL[ue_data.uri].shift(); // remove first element
 }
 
@@ -137,7 +140,7 @@ function addApDataToModel(ap_data)
 	AP_MODEL[ap_data.uri].push(ap_data);
 
 	// if array get to big, remove the first element
-	if(AP_MODEL[ap_data.uri].length > 180)
+	if(AP_MODEL[ap_data.uri].length > MAX_HISTORY)
 		AP_MODEL[ap_data.uri].shift(); // remove first element
 }
 
