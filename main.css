@@ -21,6 +21,10 @@ body {
 	padding:0px;
 }
 
+.no-margin {
+	margin:0px;
+}
+
 .debug {
 	border: 1px solid black;
 }
@@ -44,4 +48,15 @@ body {
 	/*width: 300px;*/
 	height: 100px;
 	/*border: 1px solid black;*/
+}
+
+#plot-monitor-wifi {
+	margin: auto;
+	/*width: 300px;*/
+	height: 100px;
+	/*border: 1px solid black;*/
+}
+
+.plot-monitor-healine{
+	
 }

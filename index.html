@@ -161,7 +161,7 @@
 				<h3 class="panel-title">UE Monitor</h3>
 			</div>
 
-			<div class="panel-body">
+			<div class="panel-body no-padding">
 
 				<table class="table ">
 					<tr>
@@ -192,8 +192,21 @@
 						<td>Last Update:</td>
 						<td id="ue_data_last_update">-</td>
 					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="plot-monitor-healine">Mobile data (byte/s):</div>
+							<div id="plot-monitor-mobile" class="no-padding no-margin"></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div class="plot-monitor-healine">Wi-Fi data (byte/s):</div>
+							<div id="plot-monitor-wifi" class="no-padding no-margin"></div>
+						</td>
+					</tr>
 				</table>
-				<div id="plot-monitor-mobile"></div>
+				
+
 
 			</div>
 		</div>
