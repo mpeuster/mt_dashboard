@@ -18,6 +18,13 @@ function getUe(url)
 	return null;
 }
 
+function getUeHistoricalValues(url, field)
+{
+	if(url in UE_MODEL)
+		return UE_MODEL[url].map(function(o) {return o[field];});
+	return [];
+}
+
 function getUeList()
 {
 	if(CONNECTED)
@@ -27,11 +34,7 @@ function getUeList()
 
 function getUeValueList(field)
 {
-	res = [];
-	$.each(getUeList(), function(i, ue) {
-		res.push(ue[field]);
-	});
-	return res;
+	return getUeList().map(function(o) {return o[field];});
 }
 
 function isUeRegistered(uri)
@@ -61,11 +64,7 @@ function getApList()
 
 function getApValueList(field)
 {
-	res = [];
-	$.each(getApList(), function(i, ap) {
-		res.push(ap[field]);
-	});
-	return res;
+	return getApList().map(function(o) {return o[field];});
 }
 
 function getGenericValueList(field)
