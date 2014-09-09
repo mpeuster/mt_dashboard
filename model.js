@@ -25,6 +25,15 @@ function getUeList()
 	return [];
 }
 
+function getUeValueList(field)
+{
+	res = [];
+	$.each(getUeList(), function(i, ue) {
+		res.push(ue[field]);
+	});
+	return res;
+}
+
 function isUeRegistered(uri)
 {
 	found = false;
@@ -48,4 +57,18 @@ function getApList()
 	if(CONNECTED)
 		return AP_LIST.map(getAp);
 	return [];
+}
+
+function getApValueList(field)
+{
+	res = [];
+	$.each(getApList(), function(i, ap) {
+		res.push(ap[field]);
+	});
+	return res;
+}
+
+function getGenericValueList(field)
+{
+	return getUeValueList(field).concat(getApValueList(field));
 }

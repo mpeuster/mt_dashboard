@@ -283,7 +283,7 @@ $(document).ready(function(){
 
 
 	//TODO Romove
-	//eventConnectClick(); // autoconnect for dev
+	eventConnectClick(); // autoconnect for dev
 
 
 });
