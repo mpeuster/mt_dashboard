@@ -9,6 +9,8 @@ var FETCHING_ENABLED = true;
 var UPDATE_ENABLED = true;
 var SELECTED_UE = null;
 var API_HOST = null;
+var SETTING_FETCH_INTERVAL = 2000;
+var SETTING_UPDATE_INTERVAL = 1000;
 
 //---- Model
 

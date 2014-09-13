@@ -40,7 +40,7 @@ function updateViewUeMonitor()
 		$("#ue_data_display_state").append(ue.display_state ? "On" : "Off");
 		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
 		$("#ue_data_mac").append('<code>' + ue.wifi_mac + '</code>');
-		$("#ue_data_last_update").append(new Date(ue.updated_at).toLocaleTimeString());
+		$("#ue_data_last_update").append(ue.updated_at);
 
 		// update plots
 		updateViewUeMonitorPlots(ue);
@@ -117,7 +117,7 @@ function updateView()
 	live_map_paint();
 
 	if(UPDATE_ENABLED)
-		setTimeout(updateView, 1000);
+		setTimeout(updateView, SETTING_UPDATE_INTERVAL);
 }
 
 function addUeDataToModel(ue_data)
@@ -187,7 +187,7 @@ function fetchData()
 	fetchApData();
 	// set timeout for next fetch operation
 	if(FETCHING_ENABLED)
-		setTimeout(fetchData, 2000);
+		setTimeout(fetchData, SETTING_FETCH_INTERVAL);
 }
 
 
@@ -296,6 +296,26 @@ function resizeLiveMap()
 	$('#map-area').css({'height':($(window).height() - 180)+'px'});
 }
 
+function settingFetchIntervalChange()
+{
+	var v = parseInt($('#setting_fetch_interval').val());
+	if(v >= 1000)
+	{
+		console.log("Change fetch interval: " + v);
+		SETTING_FETCH_INTERVAL = v;
+	}
+}
+
+function settingUpdateIntervalChange()
+{
+	var v = parseInt($('#setting_update_interval').val());
+	if(v >= 1000)
+	{
+		console.log("Change update interval: " + v);
+		SETTING_UPDATE_INTERVAL = v;
+	}
+}
+
 $(document).ready(function(){
 	console.info("document ready");
 	resizeLiveMap();
@@ -314,7 +334,8 @@ $(document).ready(function(){
 	// register UI events
 	$('#btn_connect').click(eventConnectClick);
 	$('#btn_disconnect').click(eventDisconnectClick);
-
+	$('#setting_fetch_interval').on('input', settingFetchIntervalChange);
+	$('#setting_update_interval').on('input', settingUpdateIntervalChange);
 
 
 	//TODO Romove
