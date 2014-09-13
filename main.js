@@ -78,7 +78,7 @@ function updateViewUeTable()
 		$("#table_ue_overview").append(line_str);
 		// add row events
 		$('#row_ue_overview_' + i).click(eventUeSelected(ue.uri));
-		$('#button_ue_overview_change_' + i).click(eventUeChangeLocation(ue.uri));
+		$('#button_ue_overview_change_' + i).click(eventChangeLocation(ue.location_service_id));
 		$('#button_ue_overview_remove_' + i).click(eventUeRemove(ue.uri));
 	});
 }
@@ -88,7 +88,7 @@ function updateViewApTable()
 	// clear
 	$("#table_ap_overview").empty();
 	// headline
-	$("#table_ap_overview").append('<tr><th>Name</th><th>BSSID</th><th>SSID</th><th>Power State</th></tr>');
+	$("#table_ap_overview").append('<tr><th>Name</th><th>BSSID</th><th>SSID</th><th>Power State</th><th> </th></tr>');
 	// content
 	$.each(getApList(), function(i, ap) {
 		var line_str = '<tr>';
@@ -97,8 +97,12 @@ function updateViewApTable()
 		line_str +=	'<td><code>' + ap.bssid + '</code></td>';
 		line_str +=	'<td>' + ap.ssid + '</td>';
 		line_str +=	'<td>' + (ap.power_state ? 'radio_on' : 'radio_off') + '</td>';
+		line_str +=	'<td class="text-right">';
+		line_str +=	'<button type="button" class="btn btn-xs btn-default" id="button_ap_overview_change_' + i + '">Change Location</button>&nbsp';
+		line_str +=	'</td>';
 		line_str +=	'</tr>' ;
 		$("#table_ap_overview").append(line_str);
+		$('#button_ap_overview_change_' + i).click(eventChangeLocation(ap.location_service_id));
 	});
 }
 
@@ -249,12 +253,40 @@ function eventUeRemove(uri)
 	};
 }
 
-function eventUeChangeLocation(uri)
+function eventChangeLocation(location_service_id)
 {
 	// function generator:
 	return function() {
-		alert("Not implemented.");
-		console.log("Change UE location: " + uri);
+		// get location inputs	
+		bootbox.prompt("Change location (X.XX, Y.YY):", function(result) {                
+			if (result !== null) {                                             
+				var loc = result.split(",");
+				if (loc.length > 1)
+				{
+					console.log("Change location: " + location_service_id);
+					var d = {
+							    "location_service_id": location_service_id,
+							    "position_x": loc[0],
+							    "position_y": loc[1]
+							};
+					// perform request
+					$.ajax({
+						url: API_HOST + "/api/location",
+						type: 'POST',
+						contentType: 'application/json',
+    					dataType: 'json',
+    					data: JSON.stringify(d),
+						success: function(result) {
+			        		console.log("Changed location: " + location_service_id);
+			    		}
+					});
+				}   
+				else
+				{
+					bootbox.alert("Bad format. Check your inputs.");
+				}      
+			}
+		});
 	};
 }
 
