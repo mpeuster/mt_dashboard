@@ -158,11 +158,18 @@ function draw_connections()
 
 function apply_world_transformation()
 {
-	// gather values
+	// fixed map size:
+	max_x =  1000;
+	min_x =  0;
+	max_y =  1000;
+	min_y =  0;
+	// automatic map size:
+	/*
 	max_x =  Math.max.apply(Math, getGenericValueList("position_x"));
 	min_x =  Math.min.apply(Math, getGenericValueList("position_x"));
 	max_y =  Math.max.apply(Math, getGenericValueList("position_y"));
 	min_y =  Math.min.apply(Math, getGenericValueList("position_y"));
+	*/
 
 	paper_width = $("#map-area").width();
 	paper_height = $("#map-area").height();
