@@ -38,7 +38,14 @@ function updateViewUeMonitor()
 		$("#ue_data_lsid").append(ue.location_service_id);
 		$("#ue_data_position").append(ue.position_x.toFixed(2) + " / " + ue.position_y.toFixed(2));
 		$("#ue_data_display_state").append(ue.display_state ? "On" : "Off");
-		$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
+		if(ue.active_application_package===null)
+		{
+			$("#ue_data_active_app").append("null");
+		}
+		else
+		{
+			$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
+		}
 		$("#ue_data_mac").append('<code>' + ue.wifi_mac + '</code>');
 		$("#ue_data_last_update").append(ue.updated_at);
 
@@ -208,6 +215,11 @@ function eventDisconnectClick()
 	$('#btn_connect').disable(false);
 	$('#text_api_host').disable(false);
 	$('#btn_disconnect').disable(true);
+	// reset model
+	UE_MODEL = {};
+	UE_LIST = [];
+	AP_MODEL = {};
+	AP_LIST = [];
 }
 
 function eventConnectClick()
