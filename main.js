@@ -220,6 +220,7 @@ function eventDisconnectClick()
 	UE_LIST = [];
 	AP_MODEL = {};
 	AP_LIST = [];
+	SELECTED_UE = null;
 }
 
 function eventConnectClick()
