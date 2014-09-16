@@ -19,12 +19,15 @@ function getUePlotData(ue, field, to_negative)
 	// zip
 	var res = [];
 	for (var i = 0; i < data.length; ++i) {
-		if(to_negative)
+		if(data[i] < 0) // no negative values
+			data[i] = 0;
+		if(to_negative) // to display two plots in one graph
 			data[i] = -data[i];
 		res.push([i, data[i]]);
 	}
 	return res;
 }
+
 
 function updateViewUeMonitorPlots(ue)
 {

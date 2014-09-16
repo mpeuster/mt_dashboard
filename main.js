@@ -329,20 +329,26 @@ function settingUpdateIntervalChange()
 	}
 }
 
+
+function setupAutocompletion()
+{
+	var candiates = [{ id: 1, name: '127.0.0.1:6680'}, { id: 2, name: 'fg-cn-pgsp-kvm.cs.upb.de:6680'}, { id: 3, name: 'localhost:6680'}];
+	$('#text_api_host').typeahead({
+    	source: candiates
+	});
+}
+
 $(document).ready(function(){
 	console.info("document ready");
 	resizeLiveMap();
 
 	// init live map
 	live_map_init();
-	// TODO remove after dev?
 	live_map_paint();
-	
-	//fetchData();
-	//updateView();
 
 	// dynamic UI setup
 	$('#btn_disconnect').disable(true);
+	setupAutocompletion();
 	
 	// register UI events
 	$('#btn_connect').click(eventConnectClick);
