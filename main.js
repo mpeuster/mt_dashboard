@@ -329,6 +329,23 @@ function settingUpdateIntervalChange()
 	}
 }
 
+var ERROR_ALERT = false;
+function errorAjaxConnection()
+{
+	// only do once
+	if(!ERROR_ALERT)
+	{
+		ERROR_ALERT = true;
+		// disconnect
+		eventDisconnectClick();
+		// show message
+		bootbox.alert("ERROR!\nAPI request failed for: " + API_HOST + "\n\n. Please check the backend connection.", function() {
+	  		// callback
+	  		ERROR_ALERT = false;
+		});
+	}
+}
+
 
 function setupAutocompletion()
 {
@@ -356,6 +373,10 @@ $(document).ready(function(){
 	$('#setting_fetch_interval').on('input', settingFetchIntervalChange);
 	$('#setting_update_interval').on('input', settingUpdateIntervalChange);
 
+	// setup global connection error handling
+	$.ajaxSetup({
+      "error": errorAjaxConnection
+	});
 
 	//TODO Romove
 	eventConnectClick(); // autoconnect for dev
