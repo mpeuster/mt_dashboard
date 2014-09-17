@@ -49,7 +49,7 @@ function updateViewUeMonitorPlots(ue)
 	var mobile_avg = Math.max(getAvg(data_mobile_rx), -getAvg(data_mobile_tx));
 	var mobile_y = Math.max(2000, mobile_avg * 10); // use n * avg as Y scale (should help against outliers)
 	var wifi_avg = Math.max(getAvg(data_wifi_rx), -getAvg(data_wifi_tx));
-	var wifi_y = Math.max(2000, mobile_avg * 10); // use n * avg as Y scale (should help against outliers)
+	var wifi_y = Math.max(20000, mobile_avg * 20); // use n * avg as Y scale (should help against outliers)
 
 	// plot layout
 	var flotOptionsMobile = {
@@ -121,8 +121,8 @@ function updateViewUeMonitorPlots(ue)
 		yaxis: {
 			show: true,
 			position: "right",
-			min: -wifi_y,
-			max: wifi_y,
+			//min: -wifi_y,
+			//max: wifi_y,
 		}
 	};
 
