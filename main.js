@@ -377,11 +377,6 @@ $(document).ready(function(){
 	$.ajaxSetup({
       "error": errorAjaxConnection
 	});
-
-	//TODO Romove
-	eventConnectClick(); // autoconnect for dev
-
-
 });
 
 $( window ).resize(function() {
