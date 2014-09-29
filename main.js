@@ -380,7 +380,8 @@ $(document).ready(function(){
       "error": errorAjaxConnection
 	});
 
-	pm_draw_gauge();
+	// init and draw power meter
+	pm_update_gauge();
 });
 
 $( window ).resize(function() {
