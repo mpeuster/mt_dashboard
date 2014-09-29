@@ -123,6 +123,8 @@ function updateView()
 
 	live_map_paint();
 
+	pm_update_gauge();
+
 	if(UPDATE_ENABLED)
 		setTimeout(updateView, SETTING_UPDATE_INTERVAL);
 }
@@ -377,6 +379,8 @@ $(document).ready(function(){
 	$.ajaxSetup({
       "error": errorAjaxConnection
 	});
+
+	pm_draw_gauge();
 });
 
 $( window ).resize(function() {
