@@ -3,7 +3,9 @@ var power_gauge_curr_max = 0;
 var POWER_SLEEP = 2.0;
 var POWER_NOLOAD = 4.0;
 var POWER_FULLLOAD = 11.0;
-
+// number of bytes per second on full load (rx + tx)
+// TODO: not sure which value is best to use here, e.g.: 54000000 = 54Mbits
+var AP_MAX_BYTES_PER_SECOND = 1000000 / 8;
 
 function pm_calc_max_power()
 {
@@ -12,8 +14,23 @@ function pm_calc_max_power()
 
 function pm_calc_current_power()
 {
-	// TODO: User AP utilization for power model calculation
-	return pm_count_active_aps()  * POWER_FULLLOAD;
+	var total_power = 0;
+	$.each(getApList(), function(i, ap) {
+    	total_power += pm_calc_current_power_of_ap(ap);
+	});
+	return total_power;
+}
+
+function pm_calc_current_power_of_ap(ap)
+{
+	// AP is sleeping
+	if(ap.power_state < 1)
+		return POWER_SLEEP;
+
+	// AP is active: interpolate between NO and FULL load
+	var total_bytes_per_second = ap.rx_bytes_per_second + ap.tx_bytes_per_second;
+	return POWER_NOLOAD	+ (POWER_FULLLOAD - POWER_NOLOAD) * Math.min(1.0, (total_bytes_per_second / AP_MAX_BYTES_PER_SECOND));
+
 }
 
 function pm_count_all_aps()
