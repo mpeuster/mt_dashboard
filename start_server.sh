@@ -1,3 +1,3 @@
 #!/bin/bash
 
-python -m SimpleHTTPServer 6090
+python -m SimpleHTTPServer 6690
