@@ -1,15 +1,20 @@
 var power_gauge = null;
 var power_gauge_curr_max = 0;
+/*
 var POWER_SLEEP = 2.0;
 var POWER_NOLOAD = 4.0;
 var POWER_FULLLOAD = 11.0;
+*/
+var POWER_SLEEP = 0.3;
+var POWER_NOLOAD = 1.5;
+var POWER_FULLLOAD = 2.8;
 // number of bytes per second on full load (rx + tx)
-// TODO: not sure which value is best to use here, e.g.: 54000000 = 54Mbits
-var AP_MAX_BYTES_PER_SECOND = 2000000 / 8;
+// TODO: not sure which value is best to use here, e.g.: 54000000 = 54Mbits / 8 = Mbyte/s
+var AP_MAX_BYTES_PER_SECOND = 3000000;
 
 function pm_calc_max_power()
 {
-	return Math.max(pm_count_all_aps() * POWER_FULLLOAD * 1.1, 40);
+	return Math.max(pm_count_all_aps() * POWER_FULLLOAD * 1.1, 10);
 }
 
 function pm_calc_current_power()
