@@ -1,12 +1,15 @@
 
 var LMAP;
 var ELEMENTS = [];
-var PAPERPADDING = 80; // padding of drawing area
+var PAPERPADDING = 20; // padding of drawing area
 var GRIDSIZE = 10;
 var APSIZE = 100;
 var UESIZE = 100;
 var RENDER_TEXT = true;
 var RENDER_CONNECTION_CIRCLE = true;
+
+var GLOBAL_MAP_WIDTH = 1200;
+var GLOBAL_MAP_HEIGHT = 1000;
 
 //---- Helper
 
@@ -19,6 +22,13 @@ function distance(o1, o2)
 	var x = Math.abs(o1.position_x - o2.position_x);
 	var y = Math.abs(o1.position_y - o2.position_y);
 	return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+}
+
+function calc_scale_factor(base_width, base_height, width, height)
+{
+	sx = base_width / width;
+	sy = base_height / height;
+	return Math.min(sx, sy);
 }
 //----
 
@@ -62,6 +72,27 @@ function draw_grid()
     		hline.attr("stroke-width", 0.3);
     	}
     }
+}
+
+
+function draw_map() 
+{
+	var selected_map = "indoor-demo1";
+	//var selected_map = "laura";
+	//var selected_map = "upb-osm";
+
+	var imgsrc = "images/maps/" + MAP_DEFINITIONS[selected_map].file;
+	var sf = calc_scale_factor(GLOBAL_MAP_WIDTH, GLOBAL_MAP_HEIGHT, MAP_DEFINITIONS[selected_map].width, MAP_DEFINITIONS[selected_map].height);
+	var x = 0;
+	var y = 0;
+	var width = MAP_DEFINITIONS[selected_map].width * sf;
+	var height = MAP_DEFINITIONS[selected_map].height * sf;
+
+
+
+
+	var img = LMAP.image(imgsrc, x, y, width, height);
+	ELEMENTS.push(img);
 }
 
 function draw_accesspoint(ap)
@@ -159,9 +190,9 @@ function draw_connections()
 function apply_world_transformation()
 {
 	// fixed map size:
-	max_x =  1000;
+	max_x =  GLOBAL_MAP_WIDTH;
 	min_x =  0;
-	max_y =  1000;
+	max_y =  GLOBAL_MAP_HEIGHT;
 	min_y =  0;
 	// automatic map size:
 	/*
@@ -183,7 +214,7 @@ function apply_world_transformation()
 	var s_y = paper_height / ((max_y - min_y) + PAPERPADDING * 2);
 
 	$.each(ELEMENTS, function(i, e) {
-		e.transform("s" + s_y + ", " + s_y + ",0,0" );
+		e.transform("s" + Math.min(s_x, s_y) + ", " + Math.min(s_x, s_y) + ",0,0" );
 		e.transform("...t" + d_x + "," + d_y);
 	});
 
@@ -204,6 +235,7 @@ function live_map_paint()
 	ELEMENTS = [];
 
 	draw_grid();
+	draw_map();
 	draw_connections();
 	draw_accesspoints();
 	draw_ues();
