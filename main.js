@@ -349,6 +349,33 @@ function errorAjaxConnection()
 }
 
 
+function eventLiveMapBackgroundSelected(key)
+{
+	// function generator:
+	return function() {
+		LIVEMAP_SELECTED_BG = key;
+    	console.log("Selected livemap background: " + key);
+	};
+}
+
+
+function setupLiveMapBackgroundDropdown()
+{
+	$("#dropdownLMBackgroundMenu").empty();
+	for(var key in MAP_DEFINITIONS){
+    	$("#dropdownLMBackgroundMenu").append('<li><a href="#" id="dropdownLMBackgroundMenu_' + key + '">' + key + '</a></li>');
+    	$('#dropdownLMBackgroundMenu_' + key).click(eventLiveMapBackgroundSelected(key));
+    	
+    	// use first BG entry that is not none as default
+    	if(LIVEMAP_SELECTED_BG === null && key !== "None")
+    	{
+    		LIVEMAP_SELECTED_BG = key;
+    		console.log("Selected livemap background: " + key);
+    	}
+	}
+}
+
+
 function setupAutocompletion()
 {
 	var candiates = [{ id: 1, name: '127.0.0.1:6680'}, { id: 2, name: 'fg-cn-pgsp-kvm.cs.upb.de:6680'}, { id: 3, name: 'localhost:6680'}];
@@ -368,6 +395,7 @@ $(document).ready(function(){
 	// dynamic UI setup
 	$('#btn_disconnect').disable(true);
 	setupAutocompletion();
+	setupLiveMapBackgroundDropdown();
 	
 	// register UI events
 	$('#btn_connect').click(eventConnectClick);

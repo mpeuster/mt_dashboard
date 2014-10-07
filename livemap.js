@@ -11,6 +11,8 @@ var RENDER_CONNECTION_CIRCLE = true;
 var GLOBAL_MAP_WIDTH = 1200;
 var GLOBAL_MAP_HEIGHT = 1000;
 
+var LIVEMAP_SELECTED_BG = null;
+
 //---- Helper
 
 /**
@@ -77,9 +79,13 @@ function draw_grid()
 
 function draw_map() 
 {
-	var selected_map = "indoor-demo1";
-	//var selected_map = "laura";
-	//var selected_map = "upb-osm";
+	var selected_map = LIVEMAP_SELECTED_BG;
+	
+	if (selected_map === null)
+		return;
+
+	if (selected_map === "None")
+		return;
 
 	var imgsrc = "images/maps/" + MAP_DEFINITIONS[selected_map].file;
 	var sf = calc_scale_factor(GLOBAL_MAP_WIDTH, GLOBAL_MAP_HEIGHT, MAP_DEFINITIONS[selected_map].width, MAP_DEFINITIONS[selected_map].height);
@@ -87,9 +93,6 @@ function draw_map()
 	var y = 0;
 	var width = MAP_DEFINITIONS[selected_map].width * sf;
 	var height = MAP_DEFINITIONS[selected_map].height * sf;
-
-
-
 
 	var img = LMAP.image(imgsrc, x, y, width, height);
 	ELEMENTS.push(img);
