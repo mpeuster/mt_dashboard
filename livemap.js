@@ -3,10 +3,12 @@ var LMAP;
 var ELEMENTS = [];
 var PAPERPADDING = 20; // padding of drawing area
 var GRIDSIZE = 10;
-var APSIZE = 100;
-var UESIZE = 100;
-var RENDER_TEXT = true;
+var APSIZE = 70;
+var UESIZE = 70;
+var RENDER_TEXT = false;
 var RENDER_CONNECTION_CIRCLE = true;
+var RENDER_AP_CIRCLE = true;
+var RENDER_UE_CIRCLE = true;
 
 var GLOBAL_MAP_WIDTH = 1200;
 var GLOBAL_MAP_HEIGHT = 1000;
@@ -103,11 +105,28 @@ function draw_accesspoint(ap)
 	var imgsrc = "images/ap_normal.png";
 	if(!ap.power_state)
 		imgsrc = "images/ap_red.png";
+
+	// circle
+	if(RENDER_AP_CIRCLE && !ap.power_state)
+	{
+		// optional circle
+		var circle = LMAP.circle(ap.position_x, ap.position_y, APSIZE * 0.7);
+		circle.attr("stroke", "#333");
+	   	//circle.attr("stroke-width", 2.0);
+	   	circle.attr("fill", "#FF6666");
+	   	circle.attr("stroke-opacity", 0.8);
+	   	circle.attr("opacity", 0.5);
+		ELEMENTS.push(circle);
+	}
+
+
+	// image
 	var img = LMAP.image(imgsrc, ap.position_x - (APSIZE/2), ap.position_y - (APSIZE/2), APSIZE, APSIZE);
 	// add tooltip
 	img.attr("title", "" + ap.device_id + "\nX:" + ap.position_x + " Y:" + ap.position_y);
-
 	ELEMENTS.push(img);
+
+	// text
 	if(RENDER_TEXT) 
 	{
 		// add text
@@ -128,8 +147,21 @@ function draw_accesspoints()
 
 function draw_ue(ue)
 {
-	var img = LMAP.image("images/ue_normal.png", ue.position_x - (UESIZE/2), ue.position_y - (UESIZE/2), UESIZE, UESIZE);
-	
+	// circle
+	if(RENDER_UE_CIRCLE && ue.assigned_accesspoint === null)
+	{
+		// optional circle
+		var circle = LMAP.circle(ue.position_x, ue.position_y, UESIZE * 0.7);
+		circle.attr("stroke", "#333");
+	   	//circle.attr("stroke-width", 2.0);
+	   	circle.attr("fill", "#FFFFFF");
+	   	circle.attr("stroke-opacity", 0.8);
+	   	circle.attr("opacity", 0.7);
+		ELEMENTS.push(circle);
+	}
+
+	// image
+	var img = LMAP.image("images/ue_normal.png", ue.position_x - (UESIZE/2), ue.position_y - (UESIZE/2), UESIZE, UESIZE);	
 	// add tooltip
 	img.attr("title", "" + ue.device_id + "\nX:" + ue.position_x.toFixed(2) + " Y:" + ue.position_y.toFixed(2));
 	ELEMENTS.push(img);
@@ -156,12 +188,12 @@ function draw_connection(ue, ap)
 	if(RENDER_CONNECTION_CIRCLE)
 	{
 		// optional circle
-		var circle = LMAP.circle(ap.position_x, ap.position_y, distance(ue, ap));
+		var circle = LMAP.circle(ap.position_x, ap.position_y, distance(ue, ap) + UESIZE * 0.6);
 		circle.attr("stroke", "#333");
 	   	//circle.attr("stroke-width", 2.0);
 	   	circle.attr("fill", "#66FF66");
-	   	circle.attr("stroke-opacity", 0.6);
-	   	circle.attr("opacity", 0.3);
+	   	circle.attr("stroke-opacity", 0.8);
+	   	circle.attr("opacity", 0.5);
 		ELEMENTS.push(circle);
 	}
 
