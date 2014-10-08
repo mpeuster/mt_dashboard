@@ -13,6 +13,13 @@ MAP_DEFINITIONS = {
 		"width": 1080,
 		"height": 828
 	},
+	"Indoor2": {
+		"file": "indoor_demo2_clean.png",
+		"x": 0,
+		"y": 0,
+		"width": 1200,
+		"height": 807
+	},
 	"Laura": {
 		"file": "laura.png",
 		"x": 0,
@@ -26,5 +33,12 @@ MAP_DEFINITIONS = {
 		"y": 0,
 		"width": 999,
 		"height": 695
+	},
+	"UPB-MAP": {
+		"file": "upb-map.png",
+		"x": 0,
+		"y": 0,
+		"width": 1353,
+		"height": 997
 	}
 };
