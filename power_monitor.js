@@ -5,9 +5,10 @@ var POWER_SLEEP = 2.0;
 var POWER_NOLOAD = 4.0;
 var POWER_FULLLOAD = 11.0;
 */
-var POWER_SLEEP = 0.3;
-var POWER_NOLOAD = 1.5;
-var POWER_FULLLOAD = 2.8;
+// new power model based on doc2a (page 21)
+var POWER_SLEEP = 0.2; // sleep mode 4 of doc 2a
+var POWER_NOLOAD = 2.3;
+var POWER_FULLLOAD = 6.9;
 // number of bytes per second on full load (rx + tx)
 // TODO: not sure which value is best to use here, e.g.: 54000000 = 54Mbits / 8 = Mbyte/s
 var AP_MAX_BYTES_PER_SECOND = 3000000;
