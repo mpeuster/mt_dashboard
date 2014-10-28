@@ -23,6 +23,9 @@ function getUePlotData(ue, field, to_negative)
 			data[i] = 0;
 		if(to_negative) // to display two plots in one graph
 			data[i] = -data[i];
+		// to Mbp/s
+		data[i] = data[i] * 8; // byte to bit
+		data[i] = data[i] / 1000000; // to Mbps
 		res.push([i, data[i]]);
 	}
 	return res;
@@ -37,6 +40,21 @@ function getAvg(data)
 	return sum / data.length;
 }
 
+function getMax(data, is_negative)
+{
+	max = 0;
+	negative_max = 0;
+	for (var i = 0; i < data.length; ++i) {
+		if (data[i][1] > max)
+			max = data[i][1];
+		if (data[i][1] < negative_max)
+			negative_max = data[i][1];
+	}
+	if(is_negative)
+		return negative_max;
+	return max;
+}
+
 
 function updateViewUeMonitorPlots(ue)
 {
@@ -46,10 +64,10 @@ function updateViewUeMonitorPlots(ue)
 	var data_wifi_rx = getUePlotData(ue, "rx_wifi_bytes_per_second", false);
 	var data_wifi_tx = getUePlotData(ue, "tx_wifi_bytes_per_second", true);
 	
-	var mobile_avg = Math.max(getAvg(data_mobile_rx), -getAvg(data_mobile_tx));
-	var mobile_y = Math.max(2000, mobile_avg * 10); // use n * avg as Y scale (should help against outliers)
-	var wifi_avg = Math.max(getAvg(data_wifi_rx), -getAvg(data_wifi_tx));
-	var wifi_y = Math.max(20000, mobile_avg * 20); // use n * avg as Y scale (should help against outliers)
+	var mobile_max = Math.max(getMax(data_mobile_rx, false), -getMax(data_mobile_tx, true));
+	var mobile_y = Math.max(0.1, mobile_max * 1.2); // use n * avg as Y scale (should help against outliers)
+	var wifi_max = Math.max(getMax(data_wifi_rx, false), -getMax(data_wifi_tx, true));
+	var wifi_y = Math.max(10, wifi_max * 1.2); // use n * avg as Y scale (should help against outliers)
 
 	// plot layout
 	var flotOptionsMobile = {
@@ -121,8 +139,8 @@ function updateViewUeMonitorPlots(ue)
 		yaxis: {
 			show: true,
 			position: "right",
-			//min: -wifi_y,
-			//max: wifi_y,
+			min: -wifi_y,
+			max: wifi_y,
 		}
 	};
 
