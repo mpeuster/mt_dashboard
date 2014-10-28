@@ -185,18 +185,6 @@ function draw_ues()
 
 function draw_connection(ue, ap)
 {
-	if(RENDER_CONNECTION_CIRCLE)
-	{
-		// optional circle
-		var circle = LMAP.circle(ap.position_x, ap.position_y, distance(ue, ap) + UESIZE * 0.6);
-		circle.attr("stroke", "#333");
-	   	//circle.attr("stroke-width", 2.0);
-	   	circle.attr("fill", "#66FF66");
-	   	circle.attr("stroke-opacity", 0.8);
-	   	circle.attr("opacity", 0.5);
-		ELEMENTS.push(circle);
-	}
-
 	// line
 	var connpath = "M " + ue.position_x + " " + ue.position_y + " L " + ap.position_x + " " + ap.position_y + " z";
    	var connline = LMAP.path(connpath);
@@ -208,6 +196,33 @@ function draw_connection(ue, ap)
 	ELEMENTS.push(connline);
 }
 
+function draw_connection_circle(ap)
+{
+	var max_distance = 0;
+	$.each(ap.assigned_ue_list, function(i, ue_url) {
+		// draw connection if needed
+		var ue = getUe(ue_url);
+		if(ue)
+		{
+			if (distance(ue, ap) > max_distance)
+			{
+				max_distance = distance(ue, ap) ;
+			}
+		}
+	});
+	if(RENDER_CONNECTION_CIRCLE && max_distance > 0)
+	{
+		// optional circle
+		var circle = LMAP.circle(ap.position_x, ap.position_y, max_distance + UESIZE * 0.6);
+		circle.attr("stroke", "#333");
+	   	//circle.attr("stroke-width", 2.0);
+	   	circle.attr("fill", "#66FF66");
+	   	circle.attr("stroke-opacity", 0.8);
+	   	circle.attr("opacity", 0.5);
+		ELEMENTS.push(circle);
+	}
+}
+
 function draw_connections()
 {
 	$.each(getUeList(), function(i, ue) {
@@ -217,6 +232,14 @@ function draw_connections()
 			var ap = getAp(ue.assigned_accesspoint);
 			if(ap)
 				draw_connection(ue, ap);
+		}
+	});
+	// connection circles
+	$.each(getApList(), function(i, ap) {
+		// draw connection if needed
+		if(ap.assigned_ue_list)
+		{
+			draw_connection_circle(ap);
 		}
 	});
 }
