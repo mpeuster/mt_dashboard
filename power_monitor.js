@@ -11,7 +11,7 @@ var POWER_NOLOAD = 2.3;
 var POWER_FULLLOAD = 6.9;
 // number of bytes per second on full load (rx + tx)
 // TODO: not sure which value is best to use here, e.g.: 54000000 = 54Mbits / 8 = Mbyte/s
-var AP_MAX_BYTES_PER_SECOND = 3000000;
+var AP_MAX_BYTES_PER_SECOND = 2000000;
 
 function pm_calc_max_power()
 {
