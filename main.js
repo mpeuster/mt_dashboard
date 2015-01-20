@@ -65,6 +65,23 @@ function updateViewUeMonitor()
 	}
 }
 
+function updateViewSystemMonitor()
+{
+	// empty fields
+	$("#selected_algorithm_name").empty();
+	
+	if(CONNECTED)
+	{
+		// fill view with data
+		$("#selected_algorithm_name").append(ALGO_SELECTED);
+	}
+	else
+	{
+		// clear
+		$("#selected_algorithm_name").append("-");
+	}
+}
+
 function updateViewUeTable()
 {
 	// clear
@@ -113,6 +130,15 @@ function updateViewApTable()
 	});
 }
 
+function updateViewAlgoDropdown()
+{
+	$("#algorithm_dropdown_list").empty();
+	$.each(ALGO_LIST, function(i, algo) {
+    	$("#algorithm_dropdown_list").append('<li><a href="#" id="algo_dropdown_item_' + i + '">' + algo + '</a></li>');
+    	$('#algo_dropdown_item_' + i).click(eventAlgoSelected(algo));
+	});
+}
+
 function updateView()
 {
 	updateViewUeDropdown();
@@ -120,6 +146,9 @@ function updateView()
 
 	updateViewUeTable();
 	updateViewApTable();
+
+	updateViewAlgoDropdown();
+	updateViewSystemMonitor();
 
 	live_map_paint();
 
@@ -187,6 +216,19 @@ function fetchApData()
 		});
 }
 
+function fetchAlgoData()
+{
+	console.debug("fetchAlgoData: " + Date.now());
+	// fetch all Algo information from backend
+	$.getJSON(API_HOST + '/api/algorithm', function(algo_list) {
+			ALGO_LIST = algo_list;
+		});
+	// fetch all Algo information from backend
+	$.getJSON(API_HOST + '/api/algorithm/selected', function(algo_sel) {
+			ALGO_SELECTED = algo_sel["selected"];
+		});
+}
+
 
 function fetchData()
 {
@@ -194,6 +236,8 @@ function fetchData()
 	fetchUeData();
 	// AP data
 	fetchApData();
+	// Algo data
+	fetchAlgoData();
 	// set timeout for next fetch operation
 	if(FETCHING_ENABLED)
 		setTimeout(fetchData, SETTING_FETCH_INTERVAL);
@@ -250,6 +294,26 @@ function eventUeSelected(uri)
 	return function() {
 		SELECTED_UE = uri;
 		console.log("Selected UE: " + uri);
+	};
+}
+
+function eventAlgoSelected(algo)
+{
+	// function generator:
+	return function() {
+		console.log("Changing selected algorithm to: " + algo);
+		var d = {"selected": algo};
+		// perform request
+		$.ajax({
+			url: API_HOST + "/api/algorithm/selected",
+			type: 'PUT',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(d),
+			success: function(result) {
+        		console.log("Algorithm changed.");
+    		}
+		});
 	};
 }
 
