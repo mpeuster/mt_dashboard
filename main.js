@@ -430,8 +430,8 @@ function setupLiveMapBackgroundDropdown()
     	$("#dropdownLMBackgroundMenu").append('<li><a href="#" id="dropdownLMBackgroundMenu_' + key + '">' + key + '</a></li>');
     	$('#dropdownLMBackgroundMenu_' + key).click(eventLiveMapBackgroundSelected(key));
     	
-    	// use first BG entry that is not none as default
-    	if(LIVEMAP_SELECTED_BG === null && key !== "None")
+    	// use first BG entry that as default (typically null)
+    	if(LIVEMAP_SELECTED_BG === null) // && key !== "None"
     	{
     		LIVEMAP_SELECTED_BG = key;
     		console.log("Selected livemap background: " + key);
