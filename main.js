@@ -442,7 +442,7 @@ function setupLiveMapBackgroundDropdown()
 
 function setupAutocompletion()
 {
-	var candiates = [{ id: 1, name: '127.0.0.1:6680'}, { id: 2, name: 'fg-cn-pgsp-kvm.cs.upb.de:6680'}, { id: 3, name: 'localhost:6680'}];
+	var candiates = [{ id: 1, name: '127.0.0.1:6680'}, { id: 2, name: 'fg-cn-pgsp-kvm.cs.upb.de:6680'}, { id: 3, name: '192.168.123.1:6680'}];
 	$('#text_api_host').typeahead({
     	source: candiates
 	});

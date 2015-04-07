@@ -3,15 +3,15 @@ var LMAP;
 var ELEMENTS = [];
 var PAPERPADDING = 20; // padding of drawing area
 var GRIDSIZE = 10;
-var APSIZE = 70;
-var UESIZE = 70;
+var APSIZE = 2;
+var UESIZE = 2;
 var RENDER_TEXT = false;
 var RENDER_CONNECTION_CIRCLE = true;
 var RENDER_AP_CIRCLE = true;
 var RENDER_UE_CIRCLE = true;
 
-var GLOBAL_MAP_WIDTH = 1200;
-var GLOBAL_MAP_HEIGHT = 1000;
+var GLOBAL_MAP_WIDTH = 20;
+var GLOBAL_MAP_HEIGHT = 20;
 
 var LIVEMAP_SELECTED_BG = null;
 
