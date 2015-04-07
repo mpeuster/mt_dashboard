@@ -47,7 +47,7 @@ function updateViewUeMonitor()
 			$("#ue_data_active_app").append(ue.active_application_package.split(".").pop().charAt(0).toUpperCase() + ue.active_application_package.split(".").pop().substring(1));
 		}
 		$("#ue_data_mac").append('<code>' + ue.wifi_mac + '</code>');
-		$("#ue_data_last_update").append(ue.updated_at);
+		$("#ue_data_last_update").append(Math.abs(new Date() - new Date(ue.updated_at) + 1000*60*60*2) / 1000);
 
 		// update plots
 		updateViewUeMonitorPlots(ue);

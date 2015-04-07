@@ -89,7 +89,7 @@
 		<form class="navbar-form navbar-right">
 			<div class="input-group">
 				<span class="input-group-addon">http://</span>
-				<input type="text" class="form-control" placeholder="api-url.or.ip" value="fg-cn-pgsp-kvm.cs.upb.de:6680" id="text_api_host" data-provide="typeahead">
+				<input type="text" class="form-control" placeholder="api-url.or.ip" value="127.0.0.1:6680" id="text_api_host" data-provide="typeahead">
 			</div>
 			<button type="button" class="btn btn-success" id="btn_connect">Connect &nbsp;<span class="glyphicon glyphicon-play-circle"></span></button>
 			<button type="button" class="btn btn-danger" id="btn_disconnect">Disconnect &nbsp;<span class="glyphicon glyphicon-off"></span></button>
@@ -250,16 +250,6 @@
 						<td>Active App:</td>
 						<td id="ue_data_active_app">-</td>
 					</tr>
-					<!--
-					<tr>
-						<td>WiFi Mac:</td>
-						<td id="ue_data_mac">-</td>
-					</tr>
-					<tr>
-						<td>Last Update:</td>
-						<td id="ue_data_last_update">-</td>
-					</tr>
-					-->
 					<tr>
 						<td colspan="2">
 							<div class="plot-monitor-healine">Mobile data (Mbps):</div>
@@ -271,6 +261,14 @@
 							<div class="plot-monitor-healine">Wi-Fi data (Mbps):</div>
 							<div id="plot-monitor-wifi" class="no-padding no-margin"></div>
 						</td>
+					</tr>
+					<tr>
+						<td>WiFi Mac:</td>
+						<td id="ue_data_mac">-</td>
+					</tr>
+					<tr>
+						<td>Time registered [s]:</td>
+						<td id="ue_data_last_update">-</td>
 					</tr>
 				</table>
 				
